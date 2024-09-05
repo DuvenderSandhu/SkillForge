@@ -1,0 +1,51 @@
+# Login Routes
+
+POST http://localhost/api/user/login HTTP/1.1
+content-type: application/json
+
+{
+    "username":"test1",
+    "email":"test1@test1.com",
+    "password":"Test1"
+    
+
+}
+
+# Create Course
+# POST http://localhost/api/courses HTTP/1.1
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmJiNDQ3MTE2YTc2ZmYzNGNlMjQ1OWMiLCJpYXQiOjE3MjM3OTc1MTMsImV4cCI6MTcyMzgwMTExM30.LoPj4FJznXEapNDIBojYBPlHa0nuyTVF-L-RyyEnZvE
+
+# {
+#   "title": "Introduction to Web Development",
+#   "description": "A comprehensive course that covers the basics of web development including HTML, CSS, and JavaScript.",
+#   "instructor": "60b72ddf4f1a2c6f14f3a14f", 
+#   "modules": [
+#     {
+#       "title": "Introduction to HTML",
+#       "content": "Learn the fundamentals of HTML including tags, attributes, and basic document structure.",
+#       "type": "text"
+#     },
+#     {
+#       "title": "CSS Basics",
+#       "content": "Understand how to style web pages using CSS, including selectors, properties, and layout techniques.",
+#       "type": "text"
+#     },
+#     {
+#       "title": "JavaScript Fundamentals",
+#       "content": "Explore the basics of JavaScript, including variables, functions, and event handling.",
+#       "type": "video"
+#     },
+#     {
+#       "title": "Final Quiz",
+#       "content": "Test your knowledge with a quiz that covers HTML, CSS, and JavaScript.",
+#       "type": "quiz"
+#     }
+#   ],
+#   "pricing": {
+#     "type": "one-time",
+#     "amount": 49.99
+#   },
+#   "status": "active"
+# }
+

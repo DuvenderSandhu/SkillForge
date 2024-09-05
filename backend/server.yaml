@@ -1,0 +1,506 @@
+openapi: 3.0.0
+info:
+  title: Education Platform API
+  version: 1.0.0
+  description: API documentation for an education platform handling courses, assignments, quizzes, and user management.
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+paths:
+  /assignments:
+    post:
+      summary: Create a new assignment
+      security:
+        - bearerAuth: []
+      tags:
+        - Assignments
+      requestBody:
+        description: Assignment object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+      responses:
+        '201':
+          description: Assignment created successfully
+        '400':
+          description: Bad request - Only teachers or admins can create an assignment
+    get:
+      summary: Get all assignments
+      tags:
+        - Assignments
+      responses:
+        '200':
+          description: A list of assignments
+        '400':
+          description: Bad request
+
+  /assignments/{id}:
+    get:
+      summary: Get a single assignment by ID
+      tags:
+        - Assignments
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Assignment ID
+      responses:
+        '200':
+          description: Assignment found
+        '404':
+          description: Assignment not found
+        '400':
+          description: Bad request
+    put:
+      summary: Update an assignment by ID
+      tags:
+        - Assignments
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Assignment ID
+      requestBody:
+        description: Assignment object to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+      responses:
+        '200':
+          description: Assignment updated successfully
+        '404':
+          description: Assignment not found
+        '400':
+          description: Bad request
+    delete:
+      summary: Delete an assignment by ID
+      tags:
+        - Assignments
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Assignment ID
+      responses:
+        '200':
+          description: Assignment deleted successfully
+        '404':
+          description: Assignment not found
+        '400':
+          description: Bad request
+
+  /assignments/submit/{assignmentID}:
+    post:
+      summary: Submit an assignment
+      security:
+        - bearerAuth: []
+      tags:
+        - Assignments
+      parameters:
+        - in: path
+          name: assignmentID
+          required: true
+          schema:
+            type: string
+          description: Assignment ID
+      requestBody:
+        description: File submission and feedback
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                submittedAt:
+                  type: string
+                  format: date-time
+                feedback:
+                  type: string
+      responses:
+        '200':
+          description: Assignment submitted successfully
+        '400':
+          description: Bad request
+        '404':
+          description: Assignment not found
+
+  /courses:
+    post:
+      summary: Create a new course
+      security:
+        - bearerAuth: []
+      tags:
+        - Courses
+      requestBody:
+        description: Course object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '201':
+          description: Course created successfully
+        '400':
+          description: Bad request - Only teachers or admins can create a course
+    get:
+      summary: Get all courses
+      tags:
+        - Courses
+      responses:
+        '200':
+          description: A list of courses
+        '400':
+          description: Bad request
+
+  /courses/{id}:
+    get:
+      summary: Get a single course by ID
+      tags:
+        - Courses
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      responses:
+        '200':
+          description: Course found
+        '404':
+          description: Course not found
+        '400':
+          description: Bad request
+    put:
+      summary: Update a course by ID
+      tags:
+        - Courses
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      requestBody:
+        description: Course object to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '200':
+          description: Course updated successfully
+        '404':
+          description: Course not found
+        '400':
+          description: Bad request
+    delete:
+      summary: Delete a course by ID
+      tags:
+        - Courses
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      responses:
+        '200':
+          description: Course deleted successfully
+        '404':
+          description: Course not found
+        '400':
+          description: Bad request
+
+  /courses/enroll/{id}:
+    post:
+      summary: Enroll a user in a course
+      security:
+        - bearerAuth: []
+      tags:
+        - Courses
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      responses:
+        '200':
+          description: User enrolled in course
+        '400':
+          description: User already enrolled in the course
+        '404':
+          description: Course not found
+
+  /courses/teacher:
+    get:
+      summary: Get courses taught by the authenticated teacher
+      security:
+        - bearerAuth: []
+      tags:
+        - Courses
+      responses:
+        '200':
+          description: A list of courses taught by the teacher
+        '404':
+          description: No courses found for this teacher
+        '500':
+          description: Server error
+
+  /courses/enrolled:
+    get:
+      summary: Get courses in which the user is enrolled
+      security:
+        - bearerAuth: []
+      tags:
+        - Courses
+      responses:
+        '200':
+          description: A list of courses in which the user is enrolled
+        '404':
+          description: Course not found
+        '400':
+          description: Bad request
+
+  /quizzes:
+    post:
+      summary: Create a new quiz
+      security:
+        - bearerAuth: []
+      tags:
+        - Quizzes
+      requestBody:
+        description: Quiz object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quiz'
+      responses:
+        '201':
+          description: Quiz created successfully
+        '400':
+          description: Bad request - Only teachers or admins can create a quiz
+    get:
+      summary: Get all quizzes
+      tags:
+        - Quizzes
+      responses:
+        '200':
+          description: A list of quizzes
+        '400':
+          description: Bad request
+
+  /quizzes/{id}:
+    get:
+      summary: Get a single quiz by ID
+      tags:
+        - Quizzes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Quiz ID
+      responses:
+        '200':
+          description: Quiz found
+        '404':
+          description: Quiz not found
+        '400':
+          description: Bad request
+    put:
+      summary: Update a quiz by ID
+      tags:
+        - Quizzes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Quiz ID
+      requestBody:
+        description: Quiz object to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quiz'
+      responses:
+        '200':
+          description: Quiz updated successfully
+        '404':
+          description: Quiz not found
+        '400':
+          description: Bad request
+    delete:
+      summary: Delete a quiz by ID
+      tags:
+        - Quizzes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Quiz ID
+      responses:
+        '200':
+          description: Quiz deleted successfully
+        '404':
+          description: Quiz not found
+        '400':
+          description: Bad request
+
+  /users:
+    get:
+      summary: Get all users
+      tags:
+        - Users
+      responses:
+        '200':
+          description: A list of users
+        '500':
+          description: Server error
+
+  /users/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        description: User object to register
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Bad request
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Assignment:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Assignment title
+        description:
+          type: string
+          description: Assignment description
+        dueDate:
+          type: string
+          format: date-time
+          description: Assignment due date
+        courseID:
+          type: string
+          description: ID of the associated course
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+          description: Files associated with the assignment
+
+    Course:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Course name
+        description:
+          type: string
+          description: Course description
+        teacherID:
+          type: string
+          description: ID of the teacher responsible for the course
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assignment'
+
+    Quiz:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Quiz title
+        description:
+          type: string
+          description: Quiz description
+        courseID:
+          type: string
+          description: ID of the associated course
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+
+    Question:
+      type: object
+      properties:
+        questionText:
+          type: string
+          description: The question text
+        options:
+          type: array
+          items:
+            type: string
+          description: The possible options for the question
+        correctAnswer:
+          type: string
+          description: The correct answer for the question
+
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+        password:
+          type: string
+          description: Password of the user
+        role:
+          type: string
+          enum:
+            - student
+            - teacher
+            - admin
+          description: Role of the user in the system
